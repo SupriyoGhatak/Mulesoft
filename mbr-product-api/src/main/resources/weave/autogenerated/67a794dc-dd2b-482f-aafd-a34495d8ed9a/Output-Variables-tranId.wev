@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_67a794dc_dd2b_482f_aafd_a34495d8ed9a_Output_Variables_tranId = String | Null
+

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="mbr-product-api-suite.xml" />
+	<munit:test name="delete:\product\(productId):mbr-product-api-config-test" doc:id="1aee18b9-d9de-4a54-a8de-f8ea9844d7dc" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="09d815d1-014c-4769-82f4-ae3d4d3eaa7d" >
+				<munit:payload value="#[readUrl('classpath://deleteproductproductIdmbrproductapiconfigtest/set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://deleteproductproductIdmbrproductapiconfigtest/set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://deleteproductproductIdmbrproductapiconfigtest/set-event_variable_.dwl')]" />
+					<munit:variable key="tranId" value="#[output application/java --- readUrl('classpath://deleteproductproductIdmbrproductapiconfigtest/set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to delete:\product\(productId):mbr-product-api-config" doc:id="ff4a2ea8-d3fd-4ee4-8851-5b9903f3e5e9" name="delete:\product\(productId):mbr-product-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="d1013860-9edd-42cd-bc32-172254f38dec" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import deleteproductproductIdmbrproductapiconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get:\product:mbr-product-api-config-test" doc:id="b05e5933-75b7-4d92-be27-027156244a03" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="e13cb0b6-1d6f-4d75-aa74-890ceff6fb88" >
+				<munit:payload value="#[readUrl('classpath://getproductmbrproductapiconfigtest/set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://getproductmbrproductapiconfigtest/set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getproductmbrproductapiconfigtest/set-event_variable_.dwl')]" />
+					<munit:variable key="tranId" value="#[output application/java --- readUrl('classpath://getproductmbrproductapiconfigtest/set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\product:mbr-product-api-config" doc:id="2a5e8dd9-db5b-47a0-8229-f488ec72bbc1" name="get:\product:mbr-product-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="439771f9-113e-4225-bcd7-0159886c1c4d" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getproductmbrproductapiconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get:\product\(productId):mbr-product-api-config-test" doc:id="24806327-bd02-47cf-b3a7-9efc32fbb690" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="8b62dd84-9959-493b-bee1-001675a56bfa" >
+				<munit:payload value="#[readUrl('classpath://getproductproductIdmbrproductapiconfigtest/set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://getproductproductIdmbrproductapiconfigtest/set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getproductproductIdmbrproductapiconfigtest/set-event_variable_.dwl')]" />
+					<munit:variable key="tranId" value="#[output application/java --- readUrl('classpath://getproductproductIdmbrproductapiconfigtest/set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\product\(productId):mbr-product-api-config" doc:id="ea006212-5d04-418a-87b3-5d4fb1a59b13" name="get:\product\(productId):mbr-product-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="078bb10e-57ef-40b1-806c-6b732611feaf" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getproductproductIdmbrproductapiconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="post:\product:application\json:mbr-product-api-config-test" doc:id="e9243a39-d8ca-4c0f-8697-5b468cf7a0f2" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="4e2465b2-2f7d-4b28-9f9d-a4125b1072ce" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://postproductapplicationjsonmbrproductapiconfigtest/set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://postproductapplicationjsonmbrproductapiconfigtest/set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://postproductapplicationjsonmbrproductapiconfigtest/set-event_variable_.dwl')]" />
+					<munit:variable key="tranId" value="#[output application/java --- readUrl('classpath://postproductapplicationjsonmbrproductapiconfigtest/set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\product:application\json:mbr-product-api-config" doc:id="127e3fed-9ef2-4927-a687-5ca15c77d88b" name="post:\product:application\json:mbr-product-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="e5fd2c61-46aa-4c63-a07a-888d5b3d130c" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import postproductapplicationjsonmbrproductapiconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="getProductByProductIdFlow-test" doc:id="ce99c62f-42bd-4ce8-93a4-88d8aecf4e1e" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="851bf8a9-c9e9-4f30-9545-2e5b5b2e71f7" >
+				<munit:payload value="#[readUrl('classpath://getProductByProductIdFlowtest/set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://getProductByProductIdFlowtest/set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getProductByProductIdFlowtest/set-event_variable_.dwl')]" />
+					<munit:variable key="tranId" value="#[output application/java --- readUrl('classpath://getProductByProductIdFlowtest/set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getProductByProductIdFlow" doc:id="c8ff8544-bcad-404b-9419-617f59110e61" name="getProductByProductIdFlow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="cbc03cf2-6fc5-456e-ae59-87463a1fc7b8" message="The payload does not match" >
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getProductByProductIdFlowtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="getProductByProductIdFlow-test1" doc:id="985cf6ba-46cc-453c-8bdc-e701da26bffb" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="8bbe5339-9ab5-460d-800a-0a6cf9d7dcc9" >
+				<munit:payload value="#[readUrl('classpath://getProductByProductIdFlowtest1/set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://getProductByProductIdFlowtest1/set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getProductByProductIdFlowtest1/set-event_variable_.dwl')]" />
+					<munit:variable key="tranId" value="#[output application/java --- readUrl('classpath://getProductByProductIdFlowtest1/set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getProductByProductIdFlow" doc:id="519b99bd-05d3-4ad1-816e-287afacd4515" name="getProductByProductIdFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="8e1d8968-4f0d-4f76-a640-963bd03746cb" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getProductByProductIdFlowtest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="mbr-product-api-suiteTest" doc:id="92f7a1f3-a9ea-41e5-b42b-ac60529f9f54" expectedErrorType="APIKIT:BAD_REQUEST">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="2dc54c95-896b-4222-8e0e-3c13e45a47b1" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mbr-product-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow Reference" doc:id="610a54f3-374e-4819-91ee-a7fa9125dd1c" name="mbr-product-api-main" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="95c93b51-2f7c-44f7-b04a-7a0c54a33497" actual="vars.httpStatus" expected="400"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="mbr-product-api-suiteTest1" doc:id="55d8cc1f-19d9-4845-970a-cc5a525771af" expectedErrorType="HTTP:BAD_REQUEST" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="d837b06b-87c4-4e1d-ab91-bfb3b0a38639" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mbr-product-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow Reference" doc:id="fe115ec0-57cd-47c6-ba10-e7f72cd8ab66" name="mbr-product-api-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="f4c3b751-1c5f-4941-ac5a-c2d6df2ad934" actual="vars.httpStatus" expected="400" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="mbr-product-api-suiteTest2" doc:id="e44b3118-71f0-4588-9ae7-172f49200acc" expectedErrorType="APIKIT:NOT_FOUND" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="058a912a-d8b1-455d-8ffe-6e587099605f" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mbr-product-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow Reference" doc:id="59e806f3-2286-4031-86f2-f543d11a3bdd" name="mbr-product-api-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="35b19ce6-173a-4813-ae52-4cf6cbb059dc" actual="vars.httpStatus" expected="404" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="mbr-product-api-suiteTest3" doc:id="dc8cfd8d-fb01-4676-9695-c444d2082892" expectedErrorType="HTTP:CONNECTIVITY" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="1d09baa1-25e6-456b-b7e8-e2b32007b985" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mbr-product-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow Reference" doc:id="a6c17201-ed70-4c44-bdba-2b13fea4725f" name="mbr-product-api-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="dd5a58a3-3ce3-48b9-8dd6-14fdd97271fd" actual="vars.httpStatus" expected="500" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="delete:\product\(productId):mbr-product-api-config-test1" doc:id="7ed350ef-943f-4be4-a743-f62e913cb8ff" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock deleteProduct" doc:id="86a9c359-e53e-49a0-a2d3-64e2a52a3576" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="711ddb58-05fa-43b4-aafd-f3981f7592eb" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://deleteproductproductIdmbrproductapiconfigtest1/mock_payload.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://deleteproductproductIdmbrproductapiconfigtest1/mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://deleteproductproductIdmbrproductapiconfigtest1/mock_variable_.dwl')]" />
+						<munit-tools:variable key="tranId" value="#[output application/java --- readUrl('classpath://deleteproductproductIdmbrproductapiconfigtest1/mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="param" value="#[output application/java --- readUrl('classpath://deleteproductproductIdmbrproductapiconfigtest1/mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="httpStatus" value="#[output application/java --- readUrl('classpath://deleteproductproductIdmbrproductapiconfigtest1/mock_variable_3.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="14eac1d3-aeff-4177-b24d-09106a00efad" >
+				<munit:payload value="#[readUrl('classpath://deleteproductproductIdmbrproductapiconfigtest1/set-event_payload1.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://deleteproductproductIdmbrproductapiconfigtest1/set-event_attributes1.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://deleteproductproductIdmbrproductapiconfigtest1/set-event_variable_2.dwl')]" />
+					<munit:variable key="tranId" value="#[output application/java --- readUrl('classpath://deleteproductproductIdmbrproductapiconfigtest1/set-event_variable_3.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to delete:\product\(productId):mbr-product-api-config" doc:id="826475a9-c4df-4010-9871-4188ccac5984" name="delete:\product\(productId):mbr-product-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="15a216b0-49b4-4e2a-9606-add5fa91f3c7" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import deleteproductproductIdmbrproductapiconfigtest1::assert_expression_payload1
+---
+assert_expression_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:assert doc:name="Assert attributes" doc:id="19b44539-fdde-428e-86ae-fce65c60c32d" message="The attributes do not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import deleteproductproductIdmbrproductapiconfigtest1::assert_expression_attributes1
+---
+assert_expression_attributes1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:assert doc:name="Assert variables" doc:id="7bb737af-c3d9-4339-970d-6d0664ca328c" message="The variables do not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import deleteproductproductIdmbrproductapiconfigtest1::assert_expression_variables1
+---
+assert_expression_variables1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+</mule>

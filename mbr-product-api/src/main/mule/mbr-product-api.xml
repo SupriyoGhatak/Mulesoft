@@ -4,7 +4,7 @@
         <http:listener-connection host="0.0.0.0" port="${http.port}" readTimeout="${http.read.timeout}"/>
     </http:listener-config>
     <apikit:config name="mbr-product-api-config" api="mbr-product-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
-    <flow name="mbr-product-api-main">
+    <flow name="mbr-product-api-main" doc:id="67a794dc-dd2b-482f-aafd-a34495d8ed9a">
         <http:listener config-ref="mbr-product-api-httpListenerConfig" path="${https.listerner.path}">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
@@ -29,7 +29,7 @@
 		<flow-ref doc:name="getAllProductsFlow" doc:id="40da45a9-fc5a-4545-b001-28fa0ab8f85b" name="getAllProductsFlow"/>
 		<logger level="INFO" doc:name="getProducts" doc:id="21e023b0-081f-4446-8c4a-adc75c803577" message="getProductFlow Exits payload: #[payload] || statusCode: #[attributes.statusCode]"/>
     </flow>
-    <flow name="get:\product\(productId):mbr-product-api-config">
+    <flow name="get:\product\(productId):mbr-product-api-config" doc:id="e1c29bd6-04fc-47d3-87f9-c5838a034052">
         <logger level="INFO" doc:name="getProductByProductId" doc:id="ed07f8a8-bc60-483c-984d-cfb4186ef3f4" message="getProductByProductId Flow Starting"/>
 		<flow-ref doc:name="getProductByProductIdFlow" doc:id="a72d4370-dd6c-4a91-a32c-7cd46e9e2eea" name="getProductByProductIdFlow"/>
 		<logger level="INFO" doc:name="getproductByProductId " doc:id="f4b6f201-169d-4ef0-a4ca-6d1dae089309" message="Flow Exits"/>
