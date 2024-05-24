@@ -1,0 +1,65 @@
+#%RAML 1.0
+title: mbr-product-api
+version: 1.0.0
+baseUri: https://api.example/productDetails/products
+mediaType: application/json
+
+types:
+  errorStatusSchema: !include schemas/errorSchema.raml
+traits:
+  commonHeaders: !include exchange_modules/94819091-e61c-4366-8a96-3b38b56a4f68/commonheaders/1.0.0/commonheaders.raml
+  commonErrors:
+    responses:
+      400:
+        body:
+          type: errorStatusSchema
+          example: !include errors/400.raml
+      401:
+        body:
+          type: errorStatusSchema
+          example: !include errors/401.raml
+      403:
+        body:
+          type: errorStatusSchema
+          example: !include errors/403.raml
+      415:
+        body:
+          type: errorStatusSchema
+          example: !include errors/415.raml
+      500:
+        body:
+          type: errorStatusSchema
+          example: !include errors/500.raml
+/product:
+  description: Get all the products. 
+  is: [commonErrors, commonHeaders: {example: "Internal"}]
+  get:
+    responses:
+      200:
+        body:
+          type: !include schemas/allProductResponse.raml
+          example: !include examples/allProductResponseExamples.raml
+  post:
+    description: To Add a Product.
+    body:
+      type: !include schemas/addProductRequest.raml
+      example: !include examples/addProductRequest.raml
+    responses:
+      201:
+        body:
+          example: {"Result": "Successfully Updated"}
+  /{productId}:
+    is: [commonErrors, commonHeaders: {example: "Internal"}]
+    get:
+      description: Get Product By Product Id.
+      responses:
+        200:
+          body:
+            type: !include schemas/getProductResponse.raml
+            example: !include examples/getProductResponseExample.raml
+    delete:
+      description: To Delete a Product
+      responses:
+        200:
+          body:
+            example: {"Result": "Product Deleted Successfully"} 

@@ -1,0 +1,7 @@
+%dw 2.0
+
+type auto_035e089e_a587_4ceb_9078_79b9f6805f1a_Output_Payload = {
+  productDetails: Array<{    productDesc: String,     productId: String,     productImg: String,     productRating: {      productRating: Number,       productCount: Number,       _?: Any    },     productName: String,     productPrice: Number,     productCatgry: String,     _?: Any  }>, 
+  _?: Any
+}
+

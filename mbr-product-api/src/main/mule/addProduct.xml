@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="addProductFlow" doc:id="f93cc467-6544-4b99-bd67-857347691b73" >
+		<logger level="INFO" doc:name="entryLogger" doc:id="a67ad265-cf50-417d-8d66-c704ebd4a0af" message="Starting of the Flow ||  initialRequest: #[payload]"/>
+		<ee:transform doc:name="requestTransformation" doc:id="3c5691b0-8526-432f-a3a3-c8386e603bdb" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  title: payload.productName as String,
+  price: payload.productPrice as Number,
+  description: payload.productDescription as String,
+  image: payload.productImage,
+  category: payload.productCategory
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="POST" doc:name="addProductRequester" doc:id="d7c69e64-d073-40d9-aa00-940f32d47812" config-ref="addProduct" path="${addProduct.base.path}"/>
+		<logger level="INFO" doc:name="backendResponseLogger" doc:id="6730adaf-857b-45a8-aa98-66be718e9ec7" message="backendResponse: #[payload] || backendStatusCode: #[attributes.statusCode]"/>
+		<choice doc:name="Choice" doc:id="7f0d389e-60e7-4826-9533-8ea7a0ddba7f" >
+			<when expression='#[attributes.statusCode == 200]'>
+				<ee:transform doc:name="success" doc:id="2387a66d-4e19-4928-8620-b253a4cbdc6f">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	tranId: vars.tranId,
+	result: "Product Added Successfully"
+}]]></ee:set-payload>
+			</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[200]]></ee:set-variable>
+					</ee:variables>
+		</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Error" doc:id="def8901d-1b62-447c-8ae3-4f3a5be98f90" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "tranId": vars.tranId default "00000",
+  "tranStatusCode": "500",
+  "tranDesc": "Internal Server Error"
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

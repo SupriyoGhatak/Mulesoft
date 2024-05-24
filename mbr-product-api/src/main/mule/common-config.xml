@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	<http:request-config name="getAllProductsRequester" doc:name="HTTP Request configuration" doc:id="54d8aa65-5db1-4f5f-97dc-5427ead8c8bd" >
+		<http:request-connection protocol="HTTPS" host="${backend.host}" port="${backend.port}" >
+			<reconnection >
+				<reconnect />
+			</reconnection>
+		</http:request-connection>
+	</http:request-config>
+	<http:request-config name="getProductByProductId" doc:name="HTTP Request configuration" doc:id="6e4c3a26-b005-4ca7-9615-ad9663e2f5af" >
+		<http:request-connection protocol="HTTPS" host="fakestoreapi.com" port="443" />
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="4ec9ec34-0d6e-44cf-8d4e-dce6b7209b74" file="application.properties" />
+	<configuration-properties doc:name="Configuration properties" doc:id="7cac644e-0091-42e7-b93d-8c637ae18c66" file="${env}.properties" />
+	<global-property doc:name="Global Property" doc:id="40dcf95a-421d-4c6a-b7ab-debde5c791d9" name="env" value="dev" />
+	<http:request-config name="addProduct" doc:name="HTTP Request configuration" doc:id="5f97a118-8e9c-4f92-8a55-804ca2df8104" >
+		<http:request-connection host="${backend.host}" port="${backend.port}" protocol="HTTPS"/>
+	</http:request-config>
+	<http:request-config name="deleteProduct" doc:name="HTTP Request configuration" doc:id="77c9abfe-3c58-4d5d-816a-b55762f9e7ce" >
+		<http:request-connection host="${backend.host}" port="${backend.port}" protocol="HTTPS"/>
+	</http:request-config>
+	<api-gateway:autodiscovery apiId="${api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="db195360-f93e-4764-975d-aa2ffeebee6a" flowRef="mbr-product-api-main" />
+</mule>

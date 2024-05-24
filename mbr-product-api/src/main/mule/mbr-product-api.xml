@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+    <http:listener-config name="mbr-product-api-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="${http.port}" readTimeout="${http.read.timeout}"/>
+    </http:listener-config>
+    <apikit:config name="mbr-product-api-config" api="mbr-product-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="mbr-product-api-main">
+        <http:listener config-ref="mbr-product-api-httpListenerConfig" path="${https.listerner.path}">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+		<set-variable value="#[attributes.headers.tranId]" doc:name="TranId" doc:id="71c2f1ef-8323-418a-adec-4c8bda5ee113" variableName="tranId"/>
+		<logger level="INFO" doc:name="Source" doc:id="fc653a33-db34-43bc-9a5e-f299f4c8ace4" message="source: #[attributes.headers.source]"/>
+		<apikit:router config-ref="mbr-product-api-config" />
+		<error-handler ref="Global-Error_Handler" />
+    </flow>
+    <flow name="delete:\product\(productId):mbr-product-api-config">
+		<logger level="INFO" doc:name="deleteProduct" doc:id="57cc8717-c401-4d14-bd23-b97ba6497738" message="Mule Entry "/>
+		<flow-ref doc:name="deleteProduct" doc:id="711ddb58-05fa-43b4-aafd-f3981f7592eb" name="deleteProductFlow"/>
+		<logger level="INFO" doc:name="deleteProduct" doc:id="1eae9dfd-afb7-40bb-a9e3-b2065e39be6a" message="deleteProduct Mule Exits"/>
+    </flow>
+    <flow name="get:\product:mbr-product-api-config">
+		<logger level="INFO" doc:name="getProducts" doc:id="89764ee4-ea82-4e86-a45a-5719123c0e13" message="getProducts Flow Starts"/>
+		<flow-ref doc:name="getAllProductsFlow" doc:id="40da45a9-fc5a-4545-b001-28fa0ab8f85b" name="getAllProductsFlow"/>
+		<logger level="INFO" doc:name="getProducts" doc:id="21e023b0-081f-4446-8c4a-adc75c803577" message="getProductFlow Exits payload: #[payload] || statusCode: #[attributes.statusCode]"/>
+    </flow>
+    <flow name="get:\product\(productId):mbr-product-api-config">
+        <logger level="INFO" doc:name="getProductByProductId" doc:id="ed07f8a8-bc60-483c-984d-cfb4186ef3f4" message="getProductByProductId Flow Starting"/>
+		<flow-ref doc:name="getProductByProductIdFlow" doc:id="a72d4370-dd6c-4a91-a32c-7cd46e9e2eea" name="getProductByProductIdFlow"/>
+		<logger level="INFO" doc:name="getproductByProductId " doc:id="f4b6f201-169d-4ef0-a4ca-6d1dae089309" message="Flow Exits"/>
+    </flow>
+    <flow name="post:\product:application\json:mbr-product-api-config">
+		<logger level="INFO" doc:name="addProduct" doc:id="b48d2636-f7e3-4de8-9ada-468ef9a3966e" message="Mule Entry"/>
+		<flow-ref doc:name="addProductFlow" doc:id="f51b81cd-992c-47e6-9369-70a385a42fd5" name="addProductFlow"/>
+		<logger level="INFO" doc:name="addProduct" doc:id="ea6119df-59f7-4bee-b9cf-11ac7f944838" message="Mule Exits"/>
+    </flow>
+</mule>

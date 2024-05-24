@@ -1,0 +1,17 @@
+#%RAML 1.0 DataType
+properties:
+  productDetails:
+    type: array
+    items:
+      properties:
+        productId: string
+        productName: string
+        productPrice: number
+        productDesc: string
+        productCatgry: string
+        productImg: string
+        productRating:
+          type: object
+          properties:
+            productRating: number
+            productCount: number
