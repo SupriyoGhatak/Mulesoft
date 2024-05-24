@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="getProductByProductIdFlow" doc:id="d3039e91-ec39-4b4b-bf9b-ebb4f72cbf3b" >
+		<logger level="INFO" doc:name="starting" doc:id="bff20da0-336d-4e74-bac3-a95316bca0af" message="getProductByProductId Flow Initial"/>
+		<set-variable value="#[attributes.uriParams.productId]" doc:name="param" doc:id="39b90e26-2eda-4b0e-b379-899a501c7ee4" variableName="param" />
+		<try doc:name="Try" doc:id="24e2b73c-83ee-470a-843b-31340178303b" >
+			<until-successful maxRetries="5" doc:name="Until Successful" doc:id="06761eb6-5c84-400f-97b2-d399227cb915" millisBetweenRetries="50000">
+				<http:request method="GET" doc:name="getProductByProductIdRequestor" doc:id="dba0adce-f33d-4009-bb10-06f279262205" config-ref="getProductByProductId" path="${getProdcutByProductId.base.path}/{productId}">
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"productId" : attributes.uriParams.productId
+}]]]></http:uri-params>
+			<http:response-validator>
+				<http:success-status-code-validator values="0..499" />
+			</http:response-validator>
+		</http:request>
+			</until-successful>
+			<error-handler >
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="ed335b09-ce8b-42fb-a232-9d2ef15830c1" type="HTTP:CONNECTIVITY, HTTP:INTERNAL_SERVER_ERROR">
+					<logger level="INFO" doc:name="Logger" doc:id="de4d46b7-2e76-42d6-bc40-ad130d366635" message="Retrying"/>
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<logger level="INFO" doc:name="backendResponse" doc:id="f66da86e-ac36-4b83-be31-141319529627" message="payload : #[payload] || backendStatudCode: #[attributes.statusCode]"/>
+		<choice doc:name="Choice" doc:id="13a614de-54d6-48b3-8bc0-880853ee9238" >
+			<when expression="#[vars.param &lt; 21 and vars.param &gt; 0]">
+				<ee:transform doc:name="success" doc:id="60ee5acf-8c7f-40d3-a4d2-a02e0d9a3e36">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  id: payload.id,
+  title: payload.title,
+  price: payload.price as String,
+  category: payload.category,
+  description: payload.description,
+  image: payload.image
+}]]></ee:set-payload>
+			</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[200]]></ee:set-variable>
+					</ee:variables>
+		</ee:transform>
+				<logger level="INFO" doc:name="success" doc:id="fe73aab2-51e2-4ef5-9e52-2e97dc8c9605" message="#[payload]"/>
+			</when>
+			<when expression="#[vars.param &gt; 20]">
+				<ee:transform doc:name="NotFound" doc:id="c3e3c417-e475-4a83-b308-1ceeaabc241f">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "tranId": vars.tranId default "00000",
+  "tranStatusCode": "404",
+  "tranDesc": "Item Not Found"
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<logger level="INFO" doc:name="Error" doc:id="94d123c8-d460-42cc-aa6c-03b070ead17c" message="Not Found" />
+			</when>
+			<when expression="#[vars.param &lt; 1]">
+				<ee:transform doc:name="NotFound" doc:id="c3f7faa3-d21c-4b00-b70e-1f3623789555" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "tranId": vars.tranId default "00000",
+  "tranStatusCode": "404",
+  "tranDesc": "Item Not Found"
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[404]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<logger level="INFO" doc:name="Error" doc:id="ccd52be9-7e11-4efe-b52a-659ef4e85d6e" message="Not Found" />
+			</when>
+			<otherwise>
+				<ee:transform doc:name="error" doc:id="21a731d6-9342-426d-8f80-50268f7a993d" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "tranId": vars.tranId default "00000",
+  "tranStatusCode": "500",
+  "tranDesc": "Internal Server Error"
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<logger level="INFO" doc:name="Issue" doc:id="bc1faf2f-6683-4c4e-aecb-2f7b9e26e740" message="Internal Server Error" />
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

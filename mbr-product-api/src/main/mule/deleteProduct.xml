@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="deleteProductFlow" doc:id="0d7071c8-b585-48ed-b8d1-e66fb1e2250e" >
+		<logger level="INFO" doc:name="Entry" doc:id="904abc22-5d39-4092-a4c0-398e90ee0eb3" message="Starting of the Flow"/>
+		<set-variable value="#[attributes.headers.productId]" doc:name="param" doc:id="58f5d093-33e5-4285-92b6-15c04f9a00da" variableName="param"/>
+		<logger level="INFO" doc:name="productIdLogger" doc:id="ee61f88f-f5cf-4076-b20b-8ab0e7851158" message="productIdLogger is : #[vars.param]"/>
+		<http:request method="DELETE" doc:name="Request" doc:id="034dadee-ed06-4447-96fa-8e0624492b0d" config-ref="deleteProduct" path="${deleteProduct.base.path}/{productId}">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"productId" : attributes.uriParams.productId
+}]]]></http:uri-params>
+		</http:request>
+		<logger level="INFO" doc:name="backendResponse" doc:id="8f466e01-d36e-4901-a64f-40fbccec4e47" message="backendResponse : #[payload] || backendStatusCode: #[attributes.statusCode]"/>
+		<choice doc:name="Choice" doc:id="f7e20b73-09f7-417d-979b-040528a2fd72" >
+			<when expression="#[payload != null]">
+				<ee:transform doc:name="success" doc:id="5f72d208-3c75-4601-a4b4-cca1d1f8e73a" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	tranId: vars.tranId,
+	result: "Product Deleted Successfully"
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[200]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</when>
+			<when expression="#[payload == null]">
+				<ee:transform doc:name="productNotFound" doc:id="5edc8498-0541-4208-807a-55b66f10083f" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "tranId": vars.tranId default "00000",
+  "tranStatusCode": "404",
+  "tranDesc": "Item Not Found"
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[404]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="error" doc:id="5eb0d529-edaf-4642-b57d-c582dd61f26e" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "tranId": vars.tranId default "00000",
+  "tranStatusCode": "500",
+  "tranDesc": "Internal Server Error"
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

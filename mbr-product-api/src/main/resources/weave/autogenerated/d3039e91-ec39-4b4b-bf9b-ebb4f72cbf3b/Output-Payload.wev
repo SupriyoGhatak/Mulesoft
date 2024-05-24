@@ -1,0 +1,12 @@
+%dw 2.0
+
+type auto_d3039e91_ec39_4b4b_bf9b_ebb4f72cbf3b_Output_Payload = {
+  image: String, 
+  price: String, 
+  description: String, 
+  id: Number, 
+  title: String, 
+  category: String, 
+  _?: Any
+}
+

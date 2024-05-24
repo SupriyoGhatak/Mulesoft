@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="getAllProductsFlow" doc:id="035e089e-a587-4ceb-9078-79b9f6805f1a" >
+		<logger level="INFO" doc:name="FlowStarted" doc:id="b2176253-6d7b-4116-b351-330b9862ebd2" message="FLow Started"/>
+		<http:request method="GET" doc:name="getAllProducts" doc:id="deed639d-0d67-48d8-8da1-71d4c116acbe" config-ref="getAllProductsRequester" path="${getAllProduct.base.path}">
+			<http:response-validator >
+				<http:success-status-code-validator values="0..499" />
+			</http:response-validator>
+		</http:request>
+		<logger level="INFO" doc:name="backendResponse" doc:id="2354513f-017e-4f22-b5f0-bc8d4e33bb3e" message="pyalod: #[payload] || backendStatusCode: #[attributes.statusCode]"/>
+		<choice doc:name="Choice" doc:id="8321a4ae-c733-4119-a6f7-1ba38d107be0" >
+			<when expression="#[attributes.statusCode == 200]">
+				<ee:transform doc:name="success" doc:id="b969730d-8190-4fcd-9149-a352097c4143">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	productDetails: payload map ( item, indx ) -> {
+		productId: item.id,
+        productName: item.title,
+        productPrice: item.price as Number,
+        productDesc: item.description,
+        productCatgry: item.category,
+        productImg: item.image,
+        productRating: {
+           productRating: item.rating.rate,
+           productCount: item.rating.count
+         }
+	}
+}]]></ee:set-payload>
+			</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[200]]></ee:set-variable>
+					</ee:variables>
+		</ee:transform>
+				<logger level="INFO" doc:name="success" doc:id="79da3476-04a3-4593-a6d4-590d7ba1fe44" message="Success"/>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="error" doc:id="ec3d6016-754e-4c76-8160-963c4ab525f4" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "tranId": vars.tranId default "00000",
+  "tranStatusCode": "500",
+  "tranDesc": "Internal Server Error"
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<logger level="INFO" doc:name="error" doc:id="4fb8f8fd-fb07-450f-8475-aa0fbaf8853d" message="Error"/>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

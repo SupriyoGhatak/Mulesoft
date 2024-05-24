@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<error-handler name="Global-Error_Handler" doc:id="094a9090-32e1-401b-a71e-8cbec17e3c29" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="3df6eaf2-5406-4629-9c27-9426b9b5a53e" type="APIKIT:BAD_REQUEST,HTTP:BAD_REQUEST">
+			<logger level="INFO" doc:name="badRequest" doc:id="f9da4e1d-bbed-4065-a037-ce49cc6d885f" message="badRequest"/>
+			<ee:transform doc:name="Transform Message" doc:id="b60f1223-487c-4042-8412-5419b3691190" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "tranId": vars.tranId default "00000",
+  "tranStatusCode": "400",
+  "tranDesc": "Bad Request"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="badRequest" doc:id="3fc3d50d-d8e0-47cc-81de-cefbbcbb3aed" message="payload : #[payload] || statusCode: #[vars.httpStatus]"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="96188d73-ad93-4b67-856f-2d8029a3b61d" type="APIKIT:NOT_FOUND, HTTP:NOT_FOUND" >
+			<logger level="INFO" doc:name="notFound" doc:id="949a3b65-f2d2-46f7-8df9-3f781b5b89a0" message="NotFound"/>
+			<ee:transform doc:name="Transform Message" doc:id="489ba509-8cc5-41d2-bfaf-9a67da09de8b" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "tranId": vars.tranId default "00000",
+  "tranStatusCode": "404",
+  "tranDesc": "Resource Not Found"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[404]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="notFound" doc:id="80774327-1e50-4d04-a565-0b832935e877" message="payload : #[payload] || statusCode: #[vars.httpStatus]"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="Mule-ESB-Bad-Request" doc:id="05fea523-33a6-4fb2-a392-e38cb6c4bcb7" type="MULE:EXPRESSION" >
+			<logger level="INFO" doc:name="badRequest" doc:id="cb1afa1a-8064-4717-a723-6504d733a686" message="badRequest" />
+			<ee:transform doc:name="Transform Message" doc:id="7ca32ea1-1f24-4355-8a19-2efe629daf73" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "tranId": vars.tranId default "00000",
+  "tranStatusCode": "400",
+  "tranDesc": "ESB Schema Error"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="badRequest" doc:id="c0bffe69-56d7-4f50-a032-1dc7eaa29778" message="payload : #[payload] || statusCode: #[vars.httpStatus]" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate1" doc:id="67554308-6b67-4616-9615-bac1139d2145" type="APIKIT:METHOD_NOT_ALLOWED" >
+			<logger level="INFO" doc:name="methodNotAllowed" doc:id="e3c6d379-5545-470e-a765-1319254dc9f2" />
+			<ee:transform doc:name="Transform Message" doc:id="5cfce37f-5414-433d-a301-bd430c462723" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "tranId": vars.tranId default "00000",
+  "tranStatusCode": "405",
+  "tranDesc": "Method Not Allowed"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[405]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="methodNotAllowed" doc:id="d8b49ec7-fd3d-4b81-8302-b2f148ec58c3" message="payload : #[payload] || statusCode: #[vars.httpStatus]"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate2" doc:id="109683b2-6dae-4134-b4d0-c56af3049a98" type="APIKIT:NOT_ACCEPTABLE" >
+			<logger level="INFO" doc:name="notAccepted" doc:id="bea09c11-eb9e-4421-848f-b08f50d9cec5" message="notAccepted"/>
+			<ee:transform doc:name="Transform Message" doc:id="53cfb5e9-f326-43db-b667-1c6841d006f3" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "tranId": vars.tranId default "00000",
+  "tranStatusCode": "406",
+  "tranDesc": "Not Accepted"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[406]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="notAccepted" doc:id="8637a6de-31c2-48ff-ba60-e19691bb8330" message="payload : #[payload] || statusCode: #[vars.httpStatus]" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate3" doc:id="5c19bc8a-aef7-44b7-83fa-d68b49e0fc51" type="APIKIT:UNSUPPORTED_MEDIA_TYPE" >
+			<logger level="INFO" doc:name="unsupporetedMediaTYpe" doc:id="1d0de2de-fb20-49fb-8de8-a120096172bd" message="notAccepted" />
+			<ee:transform doc:name="Transform Message" doc:id="3d9af271-0724-4225-9ff8-8e367e99337f" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "tranId": vars.tranId default "00000",
+  "tranStatusCode": "415",
+  "tranDesc": "Unsupported Media Type"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[415]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="unsupportedMediaType" doc:id="a7015aa1-a3a5-4141-8e0d-3b7a5fbcaf72" message="payload : #[payload] || statusCode: #[vars.httpStatus]" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="c6bffeb5-54ab-4337-b032-e3f83ff26672" type="HTTP:TIMEOUT">
+			<logger level="INFO" doc:name="Timeout" doc:id="149e597e-2ce1-4843-9c0b-aa30d612353c" message="Timeout"/>
+			<ee:transform doc:name="Transform Message" doc:id="7025d513-a76d-47ad-9dfe-90306ea72a7e" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "tranId": vars.tranId default "00000",
+  "tranStatusCode": "500",
+  "tranDesc": "Internal Server Error"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="Timeout" doc:id="8bf2282c-cf3f-45b6-ab86-b6dd83a40feb" message="payload : #[payload] || statusCode: #[vars.httpStatus]"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="b746c561-9f16-403d-b1ac-9c28d8c0d7d7" type="ANY">
+			<logger level="INFO" doc:name="ANY" doc:id="2e195149-ed78-4baa-ad94-271631696ba8" message="ANY" />
+			<ee:transform doc:name="Transform Message" doc:id="63404292-581d-4168-b650-3aaa01fb6796" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "tranId": vars.tranId default "00000",
+  "tranStatusCode": "500",
+  "tranDesc": "Internal Server Error"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="ANY" doc:id="4fa5e851-6350-4832-b685-745530fc3476" message="payload : #[payload] || statusCode: #[vars.httpStatus]" />
+		</on-error-propagate>
+	</error-handler>
+</mule>
